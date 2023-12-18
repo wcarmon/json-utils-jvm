@@ -10,7 +10,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
  * Builds an idiomatic ObjectMapper.
+ * <p>
  * Stricter in areas that create error hiding antipatterns.
+ * <p>
  * More lenient to align better with JSON5.
  */
 public final class ObjectMapperFactory {
@@ -21,7 +23,6 @@ public final class ObjectMapperFactory {
     public static ObjectMapper build() {
         return JsonMapper.builder()
                 .addModules(new JavaTimeModule())
-
                 .disable(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT)
                 .disable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
                 .disable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
@@ -36,7 +37,6 @@ public final class ObjectMapperFactory {
                 .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
                 .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .enable(DeserializationFeature.FAIL_ON_UNRESOLVED_OBJECT_IDS)
-
                 .disable(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS) // TODO: verify
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
@@ -45,7 +45,6 @@ public final class ObjectMapperFactory {
                 .enable(JsonReadFeature.ALLOW_NON_NUMERIC_NUMBERS)
                 .enable(JsonReadFeature.ALLOW_TRAILING_COMMA)
                 .enable(SerializationFeature.FAIL_ON_SELF_REFERENCES)
-
                 .serializationInclusion(JsonInclude.Include.NON_NULL)
 
                 // -- Bug: converts 'a""b' to "a\"b"
@@ -53,7 +52,6 @@ public final class ObjectMapperFactory {
                 // -- GOTCHA: makes it harder to search *.json5 files
                 // .enable(JsonReadFeature.ALLOW_UNQUOTED_FIELD_NAMES)
                 .build();
-
 
         // -- If you use Kotlin
         // new KotlinModule.Builder()
