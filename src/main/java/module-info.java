@@ -1,3 +1,4 @@
+/** JVM module specification for JSON Utils lib */
 module io.github.wcarmon.json {
     exports io.github.wcarmon.json;
 

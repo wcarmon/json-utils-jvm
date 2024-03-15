@@ -10,17 +10,30 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
  * Builds an idiomatic ObjectMapper.
- * <p>
- * Stricter in areas that create error hiding antipatterns.
- * <p>
- * More lenient to align better with JSON5.
+ *
+ * <p>Stricter in areas that create error hiding antipatterns.
+ *
+ * <p>More lenient to align better with JSON5.
  */
 public final class ObjectMapperFactory {
 
+    private ObjectMapperFactory() {}
+
     /**
-     * @return ObjectMapper with config we generally use
+     * Build a preconfigured ObjectMapper.
+     *
+     * @return ObjectMapper with our idiomatic configuration
      */
     public static ObjectMapper build() {
+        return preconfigureBuilder().build();
+    }
+
+    /**
+     * Allows subsequent configuration of ObjectMapper.
+     *
+     * @return a preconfigured builder for ObjectMapper
+     */
+    public static JsonMapper.Builder preconfigureBuilder() {
         return JsonMapper.builder()
                 .addModules(new JavaTimeModule())
                 .disable(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT)
@@ -45,13 +58,13 @@ public final class ObjectMapperFactory {
                 .enable(JsonReadFeature.ALLOW_NON_NUMERIC_NUMBERS)
                 .enable(JsonReadFeature.ALLOW_TRAILING_COMMA)
                 .enable(SerializationFeature.FAIL_ON_SELF_REFERENCES)
-                .serializationInclusion(JsonInclude.Include.NON_NULL)
+                .serializationInclusion(JsonInclude.Include.NON_NULL);
 
-                // -- Bug: converts 'a""b' to "a\"b"
-                // .enable(JsonReadFeature.ALLOW_SINGLE_QUOTES)
-                // -- GOTCHA: makes it harder to search *.json5 files
-                // .enable(JsonReadFeature.ALLOW_UNQUOTED_FIELD_NAMES)
-                .build();
+        // -- Bug: converts 'a""b' to "a\"b"
+        // .enable(JsonReadFeature.ALLOW_SINGLE_QUOTES)
+
+        // -- GOTCHA: makes it harder to search *.json5 files
+        // .enable(JsonReadFeature.ALLOW_UNQUOTED_FIELD_NAMES)
 
         // -- If you use Kotlin
         // new KotlinModule.Builder()
